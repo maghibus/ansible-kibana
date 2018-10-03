@@ -4,4 +4,3 @@
   become: true
   roles:
     - { role: ansible-kibana, run: install }
-    - { role: ansible-kibana, run: remove }
