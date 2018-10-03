@@ -1,0 +1,19 @@
+---
+# tasks file for ansible-kibana
+- name: include kibana.yml
+  include: kibana.yml
+  when: run == "install"
+  tags:
+    - install
+
+- name: include kibana-config.yml
+  include: kibana-config.yml
+  when: run == "install"
+  tags:
+    - install
+
+- name: include absent.yml
+  include: absent.yml
+  when: run == "remove"
+  tags:
+    - remove

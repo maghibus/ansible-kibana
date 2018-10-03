@@ -1,0 +1,8 @@
+---
+# vars file for ansible-kibana
+
+package_url: "https://artifacts.elastic.co/downloads/kibana/kibana"
+sysd_script: "/usr/lib/systemd/system/kibana.service"
+init_script: "/etc/init.d/kibana"
+default_file: "/etc/sysconfig/kibana"
+kibana_home: "/usr/share/kibana"

@@ -1,0 +1,45 @@
+---
+
+- name: ensure libselinux-python on CentOS 7.x
+  become: true
+  yum:
+    name: libselinux-python
+    state: present
+    update_cache: true
+  when: ( ansible_distribution == "CentOS" ) and ( ansible_distribution_major_version == "7" )
+
+- name: set fact instance_init_script
+  set_fact: instance_init_script={{init_script | dirname }}/{{init_script | basename}}
+
+- name: set fact instance_sysd_script
+  set_fact: instance_sysd_script={{sysd_script | dirname }}/{{sysd_script | basename}}
+
+# Centos 7 and up
+- name: set fact use_system_d
+  set_fact: use_system_d={{ (ansible_distribution in ['RedHat','CentOS'] and ansible_distribution_version is version_compare('7', '>=')) }}
+
+- name: add Kibana repo
+  become: true
+  template:
+    src: kibana.repo.j2
+    dest: /etc/yum.repos.d/kibana-{{repo_name}}.repo
+
+- name: remove non oss package if the old kibana package is installed
+  become: true
+  yum:
+    name: 'kibana'
+    state: 'absent'
+  when: package_name == 'kibana-oss'
+
+- name: install Kibana
+  become: true
+  yum:
+    name: kibana{% if kibana_version is defined and kibana_version != ""  %}-{{ kibana_version }}{% endif %}
+    state: present
+    update_cache: true
+    allow_downgrade: '{{ allow_downgrades }}'
+  register: kibana_install_from_repo
+  notify: reload systemd configuration
+  until: kibana_install_from_repo.rc == 0
+  retries: 5
+  delay: 10

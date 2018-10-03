@@ -1,0 +1,32 @@
+---
+# defaults file for ansible-kibana
+
+# kibana repository
+repo_name: "6.x"
+kibana_version: "6.2.4"
+allow_downgrades: true
+package_name: kibana
+run: install
+
+# kibana.yml default configuration
+elasticsearch_url: "http://localhost:9200"
+server_host: 0.0.0.0
+server_port: 5601
+templates: false
+user: kibana
+group: kibana
+
+# SSL
+ssl_dir: "/etc/kibana"
+ssl_certificate_file: ""
+ssl_key_file: ""
+
+# Auth
+basic_auth: false
+elasticsearch_username: ""
+elasticsearch_password: ""
+
+# Default directories
+logging_dir: "/var/log/kibana"
+logging_dest: "{{logging_dir}}/kibana.log"
+conf_dir: "/etc/kibana"

@@ -1,0 +1,16 @@
+---
+# Configure Kibana
+
+# Create required directories
+- name: Create Directories
+  become: true
+  file: path={{ item }} state=directory owner={{ user }} group={{ group }}
+  with_items:
+    - "{{logging_dir}}"
+    - "{{conf_dir}}"
+
+# Copy the config template
+- name: Copy Configuration File
+  become: true
+  template: src=kibana.yml.j2 dest={{conf_dir}}/kibana.yml owner={{ user }} group={{ group }} mode=0644 force=yes
+  notify: restart kibana

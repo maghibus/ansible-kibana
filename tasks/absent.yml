@@ -1,0 +1,17 @@
+---
+- name: Remove the Kibana package
+  become: true
+  yum:
+    name: kibana
+    state: absent
+- name: Remove Kibana folders
+  become: true
+  file:
+    path: "{{ item }}"
+    state: absent
+  notify: reload systemd configuration
+  with_items:
+    - "{{kibana_home}}"
+    - "{{conf_dir}}"
+    - /var/lib/kibana
+    - "{{logging_dir}}"
